@@ -1,0 +1,6 @@
+{
+  "title": "SPF Page",
+  "body": {
+      "content": "{% include 'spfblog/__i_entry.html' %}"
+  }
+}
