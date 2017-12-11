@@ -1,6 +1,6 @@
 {
-  "title": "SPF Page",
+  "title": "{{ entry.headline }}",
   "body": {
-      "content": "{% include 'spfblog/__i_entry.html' %}"
+      "content": "{% filter escapejs %}{% include 'spfblog/__i_entry.html' %}{% endfilter %}"
   }
 }

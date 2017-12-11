@@ -1,0 +1,7 @@
+{% extends "__base.html" %}
+
+{% block title %}{{ entry.headline }}{% endblock %}
+
+{% block content %}
+    {% include "spfblog/__i_entry.html" with entry=entry %}
+{% endblock %}

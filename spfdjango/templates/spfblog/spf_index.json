@@ -1,0 +1,6 @@
+{
+  "title": "Home Page",
+  "body": {
+      "content": "{% filter escapejs %}{% include 'spfblog/__i_entries.html' %}{% endfilter %}"
+  }
+}

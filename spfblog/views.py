@@ -1,41 +1,35 @@
-import json
-
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 
 from spfblog.models import Entry
 
 
 def blog_index(request):
-    return render(request,
-                  'spfblog/main.html',
-                  {'entries': Entry.objects.all()}
-                  )
+    return SPFResponse(
+        request,
+        'spfblog/index.html',
+        {'entries': Entry.objects.all()},
+        'spfblog/spf_index.json'
+    )
 
 
 def article_index(request, pk):
     entry = get_object_or_404(Entry, pk=pk)
-    json_response = render_to_string(
-        'spfblog/spf_article.json',
-        {'entry': entry}).replace("\n", "\\n")
-    print(json_response)
-    json_resp = json.loads(json_response)
-    print(json_resp)
+    return SPFResponse(
+        request,
+        'spfblog/entry.html',
+        {'entry': entry},
+        'spfblog/spf_article.json'
+    )
+
+
+def SPFResponse(request, template_name, data, json_tempalte_name):
     if request.GET.get('spf'):
-        json_response = render_to_string(
-            'spfblog/spf_article.json',
-            {'entry': entry}).replace("\r\n", "\\n")
-        str_resp = str(json_response)
-        print(str_resp)
-        json_resp = json.loads(str_resp)
-        return JsonResponse(json_resp)
-        return JsonResponse({
-            'title': 'SPF Page',
-            'body': {
-                'content': '<h1>' + entry.headline + '</h1>' + \
-                           '<p class="help-text">' + entry.body + '</p>'
-            }
-        })
+        str_response = render_to_string(
+            json_tempalte_name,
+            data
+        ).encode('utf-8')
+        return HttpResponse(str_response, content_type='application/json')
     else:
-        return redirect('blog:index')
+        return render(request, template_name, data)
